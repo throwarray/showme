@@ -1,4 +1,3 @@
-
 local function NEAR (enumerator, _table)
     local output = _table or {}
     for entity in enumerator() do
@@ -19,7 +18,7 @@ Citizen.CreateThread(function ()
         AllWorldVehicles(ALL_WORLD_ENTITIES)
         AllWorldPeds(ALL_WORLD_ENTITIES)
         AllWorldPickups(ALL_WORLD_ENTITIES)
-        Citizen.Wait(16)
+        Citizen.Wait(300)
     end
 end)
 
@@ -231,10 +230,27 @@ local function DisplayChosenEntityStats (e)
 	), screenW / 2, 0.0, 0.33, STYLE_CHOSEN_ENTITY_STATS)
 end
 
+local function SetClipboardChosenEntityStats (e)
+    exports.clipboard:SetClipboard(json.encode({
+        entity = e.entity,
+        model = e.model,
+        entityType = e.entityType,
+        health = e.health,
+        maxHealth = e.maxHealth,
+        distance = e.distance,
+        x = e.coords.x,
+        y = e.coords.y,
+        z = e.coords.z,
+        heading = e.heading,
+        interior = e.interior,
+        room = e.room
+    }), function (err)
+        --print('SET CLIPBOARD SUCCESS', not err)
+    end)  
+end
 
 
 Citizen.CreateThread(function ()
-
     local player = {}
     local nearest = {}
     local targeted = {}
@@ -264,6 +280,10 @@ Citizen.CreateThread(function ()
             selected.from_aim = false
 			EntityStats(tonumber(entity), selected)
 			LoadInterior(selected.interior)
+
+			if args[2] == 'true' or args[2] == true then
+			    SetClipboardChosenEntityStats(selected)
+			end
         end
     end, false)
 
