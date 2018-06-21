@@ -231,7 +231,7 @@ local function DisplayChosenEntityStats (e)
 end
 
 local function SetClipboardChosenEntityStats (e)
-    exports.clipboard:SetClipboard(json.encode({
+    exports.clipboard:SetClipboard({
         entity = e.entity,
         model = e.model,
         entityType = e.entityType,
@@ -244,7 +244,7 @@ local function SetClipboardChosenEntityStats (e)
         heading = e.heading,
         interior = e.interior,
         room = e.room
-    }), function (err)
+    }, function (err)
         --print('SET CLIPBOARD SUCCESS', not err)
     end)  
 end
